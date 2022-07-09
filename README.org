@@ -1,2 +1,2 @@
-# data_structs
+* data-structs
 Contains stuff on datastructs and algorithms (linked lists, hash tables, graphs etc)

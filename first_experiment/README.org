@@ -1,0 +1,7 @@
+* 
+
+* Directory Layout
+  - cmp: contains expected output
+  - exp: contains experimental code
+  - input: contains input text to be processed
+  - out: contains output text files
