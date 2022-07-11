@@ -26,15 +26,12 @@ int fibonacci_fast(int n) {
 		return n;
 	int a = 0;
 	int b = 1;
+	
 	for (int i=2;i<=n;i++){
-		if (i & 1) { // I think this is odd probably
-			b += a;
-		}
-		else {
-			a += b;
-		}
+		std::swap(a, b);
+		b += a;
 	}
-	return n & 1 ? b : a;
+	return b;
 }
 
 void test_solution() {

@@ -1,4 +1,3 @@
-#include <cassert>
 #include <iostream>
 using namespace std;
 
@@ -34,27 +33,18 @@ long long get_fibonacci_huge_optimized(long long n, long long m) {
 	return fibonacci_fast(n % pisano, m);
 }
 
-
-long long get_fibonacci_huge_naive(long long n, long long m) {
-	if (n <= 1)
-		return n;
-
-	long long previous = 0;
-	long long current  = 1;
-
-	for (long long i = 0; i < n - 1; ++i) {
-		long long tmp_previous = previous;
-		previous = current;
-		current = tmp_previous + current;
-	}
-
-	return current % m;
+int fibonacci_sum_optimized(long long n){
+	int fn_1, fn;
+	fn_1 = get_fibonacci_huge_optimized(n - 1, 10);
+	fn = get_fibonacci_huge_optimized(n, 10);
+	return (fn + fn_1) * fn % 10;
 }
 
+
+
+
 int main() {
-	long long n, m;
-	assert (getPisano(3) == 8);
-	std::cin >> n >> m;
-	// std::cout << get_fibonacci_huge_naive(n, m) << '\n';
-	std::cout << get_fibonacci_huge_optimized(n, m) << '\n';
+    long long n = 0;
+    std::cin >> n;
+    std::cout << fibonacci_sum_optimized(n);
 }

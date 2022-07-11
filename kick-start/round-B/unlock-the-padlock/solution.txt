@@ -1,0 +1,167 @@
+Analysis
+
+In the given problem, the range [li−1,ri−1]
+chosen in the (i−1)-th operation needs to be completely contained within the range [li,ri] chosen in the i-th operation; that is, li≤li−1≤ri−1≤ri. The initial range ([l1,r1]) can be chosen arbitrarily. If we reverse the order of these operations, we would get the same final combination. For the remaining analysis, we would assume the reverse order of operations, that is, li−1≤li≤ri≤ri−1
+
+.
+Test set 1
+
+In this test set, we can start from range [1,N]
+and greedily choose the side that requires lesser rotations and make it zero, and solve for the next number on that side. We should also keep track of the number of rotations done till now. Let the current range that we are trying to solve be [i,j] and let the number of rotations modulo D be k. Then, the current value of index i would be (Vi−k+D)modD. Similarly, the current value of index j would be (Vj−k+D)modD. Let the current values of indexes i and j be currentVali and currentValj respectively. The number of rotations required to make dial at index i zero would be min(currentVali,D−currentVali). The number of rotations required to make dial at index j zero would be min(currentValj,D−currentValj). If index i requires less number of rotations, we then add min(currentVali,D−currentVali) to the answer and solve for range [i+1,j]. Otherwise, if index j requires less number of rotations, we then add min(currentValj,D−currentValj) to the answer and solve for range [i,j−1]
+
+.
+
+Why would the greedy approach work? Let solve(i,j,k)
+denote the number of operations required to make all the elements in the range [i,j] zero given that k rotations have happened. When we are solving for range [i,j], there are 4
+
+possible cases that could occur:
+
+    currentVali=0,currentValj=0
+
+. In this case, we can reduce the range from both the sides. Hence, solve(i,j,k)=solve(i+1,j−1,k)
+.
+currentVali=1,currentValj=1
+. In this case, we can reduce the range from both the sides. Hence, solve(i,j,k)=1+solve(i+1,j−1,k)
+.
+currentVali=1,currentValj=0
+. In this case, it is optimal to reduce the range from the right side because the value of index j is already zero and we would not require any further operations. If we choose to convert index i to zero, we would need one operation to convert the value of index i to zero. And this would change the value of index j to 1 which may require one more operation to convert it to zero. So, we might end up taking at least 1 more operation if we choose to make index i to 0. So, it is optimal to exclude the index j. Hence, solve(i,j,k)=solve(i,j−1,k)
+.
+currentVali=0,currentValj=1
+. Similar explanation as above, it is optimal to exclude the index i. Hence, solve(i,j,k)=solve(i+1,j,k)
+
+    .
+
+At each step, we perform constant operations to check which index requires less number of rotations and then make that element zero. Hence, it would take O(N)
+
+time complexity to make all the elements zero.
+Test set 2
+
+In this test set, the greedy approach would not work because the number of digits is more. We can use dynamic programming to solve this test set. Let dp(i,j,k)
+denote the minimum number of operations required to make all elements from i to j equal to 0 and k be the number of rotations modulo D that have been done till now. Then, currentVali=(Vi−k+D)modD. Similarly, currentValj=(Vj−k+D)modD
+
+. We then solve for both the cases.
+
+    For converting index i
+
+to 0, it would take min(currentVali,D−currentVali) operations. Let currOperations be the number of operations required to convert current index to 0. So, currOperations=min(currentVali,D−currentVali). We then recursively solve for dp(i+1,j,(k+currOperations)modD). Let val1=dp(i+1,j,(k+currOperations)modD)+currOperations
+.
+For converting index j
+to 0, it would take min(currentValj,D−currentValj) operations. Let currOperations=min(currentValj,D−currentValj). We then recursively solve for dp(i,j−1,(k+currOperations)modD). Let val2=dp(i,j−1,(k+currOperations)modD)+currOperations
+
+    .
+
+Finally, dp(i,j,k)=min(val1,val2). Please take a look at the pseudocode below:
+
+Sample Code(C++)
+
+
+int solve(int i, int j, int k) {
+  if(i > j) {
+    return 0;
+  }
+  if(dp[i][j][k] != -1) {
+    return dp[i][j][k];
+  }
+  int currentVal_i = (V[i] - k + D) % D;
+  int currentVal_j = (V[j] - k + D) % D;
+  // Convert index i to 0.
+  int currOperations = min(currentVal_i, D - currentVal_i);
+  int val_1 = currOperations + solve(i+1, j, (k + currOperations) % D);
+  // Convert index j to 0.
+  currOperations = min(currentVal_j, D - currentVal_j);
+  int val_2 = currOperations + solve(i, j - 1, (k + currOperations) % D);
+  return dp[i][j][k] = min(val_1, val_2);
+}
+
+We can get the final answer from dp(1,N,0)
+. There are a total of O(N2⋅D) number of states. And we perform constant operations for each state. Hence, the overall complexity of the solution is O(N2⋅D)
+
+.
+Test set 3
+
+In this test set, D
+is very large, so the solution for the previous test set would time out. An interesting observation is that we do not need to keep track of the number of rotations when solving for a range [i,j]. If we keep track of which side (left or right) was made zero in the previous operation, we can calculate the number of rotations modulo D that has been done till now. The last element that becomes zero will be because of the combination of all the rotations done so far. So, let us say initial value of the element that was made zero in the previous operation was x. Then, total rotations applied so far have combinely made it zero. Then all numbers inside the range [i,j] are affected by D−x
+
+.
+
+We can then solve the current test set by having dp(i,j,bit)
+denoting the minimum number of operations required to make all elements from i to j equal to 0 given that the element that was made zero in the previous operation is on the left side if bit=0, and is on the right side if bit=1
+
+.
+
+Let the number of rotations done till now modulo D
+be k. The value of k
+
+can be determined as follows:
+
+    If bit=0
+
+:
+
+    If i>1
+
+, then k=D−Vi−1
+.
+Otherwise, k=0
+
+    .
+
+If bit=1
+:
+
+    If j<N
+
+, then k=D−Vj+1
+.
+Otherwise, k=0
+
+        .
+
+Then currentVali=(Vi+k)modD and currentValj=(Vj+k)modD. For a particular state dp(i,j,bit), we would transition to the next state as follows.
+
+    For converting index i
+
+to 0, it would take min(currentVali,D−currentVali) operations. Let currOperations=min(currentVali,D−currentVali). We then recursively solve for dp(i+1,j,0). Let val1=dp(i+1,j,0)+currOperations
+.
+For converting index j
+to 0, it would take min(currentValj,D−currentValj) operations. Let currOperations=min(currentValj,D−currentValj). We then recursively solve for dp(i,j−1,1). Let val2=dp(i,j−1,1)+currOperations
+
+    .
+
+Finally, dp(i,j,bit)=min(val1,val2). Please take a look at the pseudocode below:
+
+Sample Code(C++)
+
+
+int solve(int i, int j, bool bit) {
+  if(i > j) {
+    return 0;
+  }
+  if(dp[i][j][bit] != -1) {
+    return dp[i][j][bit];
+  }
+  int k = 0;
+  if(!bit) {
+    if(i > 1) {
+      k = D - V[i-1];
+    }
+  }
+  else {
+    if(j < N ) {
+       k = D - V[j+1];
+    }
+  }
+  int currentVal_i = (V[i] - k + D) % D;
+  int currentVal_j = (V[j] - k + D) % D;
+  // Convert index i to 0.
+  int currOperations = min(currentVal_i, D - currentVal_i);
+  int val_1 = currOperations + solve(i+1, j, 0);
+  // Convert index j to 0.
+  currOperations = min(currentVal_j, D - currentVal_j);
+  int val_2 = currOperations + solve(i, j - 1, 1);
+  return dp[i][j][bit] = min(val_1, val_2);
+}
+
+We can get the final answer from dp(1,N,0)
+. There are a total of O(N2) number of states. And we perform constant operations for each state. Hence, the overall complexity of the solution is O(N2).
+Note that, if we solve the dynamic programming solution mentioned in Test Set 2 recursively, we will only visit O(N2) states because the number of rotations from left side and right side will always be fixed. Hence, the recursive version of Test Set 2 solution where we keep track of only the states that we visit would pass this test set. 

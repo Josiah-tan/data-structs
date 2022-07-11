@@ -23,11 +23,13 @@ LDLIBS   := -lm
 stress: $(EXE)
 	$(EXE)
 
+compare: test
+	diff -r --ignore-trailing-space $(CMP_DIR) $(OUT_DIR)
+
 test: $(OUT) $(EXE)
 
-$(OUT_DIR)/%.txt: $(IN_DIR)/%.txt $(CMP_DIR)/%.txt $(EXE) | $(OUT_DIR)
+$(OUT_DIR)/%.txt: $(IN_DIR)/%.txt $(EXE) | $(OUT_DIR)
 	cat $< | $(EXE) > $@
-	diff $@ $(word 2, $^) --ignore-trailing-space
 	
 all: $(EXE)
 
