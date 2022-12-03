@@ -43,9 +43,11 @@ class Greedy{
 				return 1 + solve(i + 1, j - 1, k + 1);
 			}
 		}
-		int solve(){
-			return solve(0, N-1, 0);
-		}
+		/*
+		 * brief:
+		 *
+		*/
+		int solve();
 };
 
 
@@ -64,3 +66,7 @@ int main(void){
 	}
 }
 
+
+int Greedy::solve(){
+	return solve(0, N-1, 0);
+}

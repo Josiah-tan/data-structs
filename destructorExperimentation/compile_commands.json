@@ -1,0 +1,22 @@
+[
+  {
+    "directory": ".",
+    "command": "# g++ -Iinclude -MMD -MP -Wall -fsanitize=address -g -c main.cpp -o include/main.o",
+    "file": "include/main.o"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -Iinclude -MMD -MP -Wall -fsanitize=address -g -o include/main.o -c main.cpp",
+    "file": "main.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "# g++ -Iinclude -MMD -MP -Wall -fsanitize=address -g -c template.cpp -o include/template.o",
+    "file": "include/template.o"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -Iinclude -MMD -MP -Wall -fsanitize=address -g -o include/template.o -c template.cpp",
+    "file": "template.cpp"
+  }
+]
