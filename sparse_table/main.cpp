@@ -27,6 +27,7 @@ class SparseTable{
 		int k;
 	public:
 		SparseTable(vector<int> &array, int (*function) (int, int)): array(array), function(function){
+			// O(n log n) (space and time)
 			n = array.size();
 			k = log2Floor(n);
 			dp = vector<vector<int>>(k + 1, vector<int>(n));
@@ -40,6 +41,7 @@ class SparseTable{
 			}
 		}
 		int query(int left, int right) {
+			// O (log(n))
 			int answer = 0;
 			for (int i = k; ~i; i--){
 				if (1 << i <= right - left + 1){
@@ -55,6 +57,7 @@ class TwoOverlapSparseTable : public SparseTable {
 	public:
 		TwoOverlapSparseTable(vector<int> &array, int(*function)(int, int)) : SparseTable(array, function){}
 		int query(int left, int right){
+			// O (1)
 			int length = right - left + 1;
 			int log_length = log2Floor(length);
 			return function(dp[log_length][left], dp[log_length][right - (1 << log_length) + 1]);
