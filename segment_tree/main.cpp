@@ -9,7 +9,7 @@
 #include<queue>
 
 using namespace std;
-
+// min, max, GCD, LCM, sum, count
 // nodes in heap-like order (1 indexed)
 // node contains [left_segment, right_segment] (result of operation over that region)
 class SegmentTreeNaive{
@@ -20,6 +20,7 @@ class SegmentTreeNaive{
 		int (*function)(int, int);
 	public:
 		SegmentTreeNaive(vector<int>& array, int(function)(int, int)): array(array), function(function){
+			// O(N) space time (building)
 			size = array.size();
 			tree = vector<int>(size * 4);
 			build(1, 0, size - 1);
@@ -40,6 +41,7 @@ class SegmentTreeNaive{
 			std::cout << "tree[node] = " << tree[node] << std::endl;
 		}
 		int query(int left, int right){
+			// O(log(N)) time
 			return query(1, 0, size - 1, left, right);
 		}
 		int query(int node, int segment_left, int segment_right, int left, int right){
@@ -60,6 +62,7 @@ class SegmentTreeNaive{
 			}
 		}
 		void update(int position, int value){
+			// O(log(N)) time
 			update(1, 0, size - 1, position, value);
 		}
 		void update(int node, int segment_left, int segment_right, int position, int value){
@@ -85,7 +88,7 @@ class SegmentTreeNaive{
 // use Euler tour traversal (preorder traversal)
 // for current node, segment [left, right], size = right - left + 1
 // number elements = 2 * size - 1
-// given left node represent segment [left, middle] → size = right - left + 1
+// given left node represent segment [left, middle] → size = middle - left + 1
 // right node = current node + (2 * (middle - left + 1)) - 1 + 1 = current node + (2 * (middle - left + 1))
 
 class SegmentTree{

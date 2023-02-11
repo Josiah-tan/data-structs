@@ -1,0 +1,6 @@
+* 
+
+* Directory Layout
+  - cmp: contains expected output
+  - in: contains input text to be processed
+  - out: contains output text files
