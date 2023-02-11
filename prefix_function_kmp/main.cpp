@@ -61,6 +61,33 @@ vector<int> computeAllMatches(string pattern, string text){
 	return solutions;
 }
 
+string generateGray(int number){
+	string gray = "a";
+	for (int i = 1; i < number; i++){
+		string new_character = string(1, i + 'a');
+		gray = gray + new_character + gray;
+	}
+	return gray;
+}
+
+int computeGrayMatch(string match, int k){
+	vector<vector<int>> automaton = computeAutomaton(match);
+	vector<vector<int>> G(k + 1, vector<int>(automaton.size()));
+	vector<vector<int>> K(k + 1, vector<int>(automaton.size()));
+	for (int j = 0; j < automaton.size(); j++){
+		K[0][j] = 0;
+		G[0][j] = j;
+	}
+	for (int i = 1; i <= k; i++){
+		for (int j = 0; j < automaton.size(); j++){
+			int middle = automaton[G[i-1][j]][i - 1]; // i - 1 because a ↦ 0
+			G[i][j] = G[i - 1][middle];
+			K[i][j] = K[i-1][j] + (middle == match.size()) + K[i-1][middle];
+		}
+	}
+	return K[k][0];
+}
+
 int main(void){
 	vector<int> answer;
 	answer = {0, 0, 0, 1, 2, 3, 0};
@@ -69,5 +96,9 @@ int main(void){
 	same(prefixKmp("aabaaab"), answer);
 	same(computeAutomaton("hello world"), computeAutomatonNaive("hello world"));
 	same(computeAllMatches("ab", "abcabcd"), {0, 3});
+	assert(generateGray(3) == "abacaba");
+	string match = "abac";
+	assert(computeAllMatches(match, generateGray(4)).size() == 2);
+	assert(computeAllMatches(match, generateGray(5)).size() == 4);
+	assert(computeAllMatches(match, generateGray(5)).size() == computeGrayMatch(match, 5));
 }
-
