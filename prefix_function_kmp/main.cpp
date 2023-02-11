@@ -29,7 +29,7 @@ vector<vector<int>> computeAutomatonNaive(string s){
 	for (int i = 0; i < n; i++){
 		for (int c = 0; c < 26; c++){
 			int j = i;
-			while (j > 0 && 'a' + c != s[j]) j = pi[j-1];
+			while (j && 'a' + c != s[j]) j = pi[j - 1];
 			automaton[i][c] = j + ('a' + c == s[j]);
 		}
 	}
@@ -43,7 +43,7 @@ vector<vector<int>> computeAutomaton(string s){
 	vector<vector<int>> automaton(n, vector<int>(26));
 	for (int i = 0; i < n; i++){
 		for (int c = 0; c < 26; c++){
-			automaton[i][c] = (i && 'a' + c != s[i]) ? automaton[pi[i-1]][c] : i + ('a' + c == s[i]);
+			automaton[i][c] = (i && 'a' + c != s[i]) ? automaton[pi[i - 1]][c] : i + ('a' + c == s[i]);
 		}
 	}
 	return automaton;
@@ -52,27 +52,35 @@ vector<vector<int>> computeAutomaton(string s){
 vector<int> computeAllMatches(string pattern, string text){
 	vector<vector<int>> automaton = computeAutomaton(pattern);
 	vector<int> solutions;
-	for (int i = 0, pointer = 0; i < text.size(); i++){
-		pointer = automaton[pointer][text[i] - 'a'];
-		if (pointer == pattern.size()){
-			solutions.push_back(i - pattern.size() + 1);
+	for (int i = 0, j = 0; i < text.size(); i++){
+		j = automaton[j][text[i] - 'a'];
+		if (j == pattern.size()){
+			solutions.push_back(i - j + 1);
 		}
 	}
 	return solutions;
 }
 
+// string generateGray(int number){
+// 	string gray = "a";
+// 	for (int i = 1; i < number; i++){
+// 		string new_character = string(1, i + 'a');
+// 		gray = gray + new_character + gray;
+// 	}
+// 	return gray;
+// }
+
 string generateGray(int number){
-	string gray = "a";
-	for (int i = 1; i < number; i++){
-		string new_character = string(1, i + 'a');
-		gray = gray + new_character + gray;
+	string result = "";
+	for (int i = 0; i < number; i++){
+		result = result + string(1, i + 'a') + result;
 	}
-	return gray;
+	return result;
 }
 
 int computeGrayMatch(string match, int k){
 	// G[i][j] → start state j, processing string i, value of automaton after finish
-	// K → starting with state j, number of occurrences of s in g_i
+	// K[i][j] → starting with state j, number of occurrences of s in g_i
 	vector<vector<int>> automaton = computeAutomaton(match);
 	vector<vector<int>> G(k + 1, vector<int>(automaton.size()));
 	vector<vector<int>> K(k + 1, vector<int>(automaton.size()));
@@ -82,9 +90,9 @@ int computeGrayMatch(string match, int k){
 	}
 	for (int i = 1; i <= k; i++){
 		for (int j = 0; j < automaton.size(); j++){
-			int middle = automaton[G[i-1][j]][i - 1]; // i - 1 because a ↦ 0
+			int middle = automaton[G[i - 1][j]][i - 1];
 			G[i][j] = G[i - 1][middle];
-			K[i][j] = K[i-1][j] + (middle == match.size()) + K[i-1][middle];
+			K[i][j] = K[i - 1][j] + (middle == match.size()) + K[i - 1][middle];
 		}
 	}
 	return K[k][0];
