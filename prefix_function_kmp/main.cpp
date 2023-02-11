@@ -71,6 +71,8 @@ string generateGray(int number){
 }
 
 int computeGrayMatch(string match, int k){
+	// G[i][j] → start state j, processing string i, value of automaton after finish
+	// K → starting with state j, number of occurrences of s in g_i
 	vector<vector<int>> automaton = computeAutomaton(match);
 	vector<vector<int>> G(k + 1, vector<int>(automaton.size()));
 	vector<vector<int>> K(k + 1, vector<int>(automaton.size()));
@@ -101,4 +103,5 @@ int main(void){
 	assert(computeAllMatches(match, generateGray(4)).size() == 2);
 	assert(computeAllMatches(match, generateGray(5)).size() == 4);
 	assert(computeAllMatches(match, generateGray(5)).size() == computeGrayMatch(match, 5));
+	assert(computeAllMatches(match, generateGray(10)).size() == computeGrayMatch(match, 10));
 }
