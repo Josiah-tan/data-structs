@@ -61,14 +61,6 @@ vector<int> computeAllMatches(string pattern, string text){
 	return solutions;
 }
 
-// string generateGray(int number){
-// 	string gray = "a";
-// 	for (int i = 1; i < number; i++){
-// 		string new_character = string(1, i + 'a');
-// 		gray = gray + new_character + gray;
-// 	}
-// 	return gray;
-// }
 
 string generateGray(int number){
 	string result = "";
