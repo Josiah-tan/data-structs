@@ -19,12 +19,12 @@ vector<string> duval(const string &s){
 		// [k, j) → j - k = length of repeating block
 		// stare at this:
 		// 1231231230
-		// ^     ^  ^
-		// i     j  k
-		// 
+		// ^	 ^	^
+		// i     k  j
+		//
 		// 1231231230
 		// ^    ^  ^
-		// i    j  k
+		// i    k  j
 		int k = i, j = i + 1;
 		while (j < n){
 			if (s[k] > s[j]){
