@@ -26,11 +26,10 @@ vector<int> sortCyclicShifts(const string &s){
 	c[p[0]] = 0;
 	int classes = 1; // current number of classes
 	for (int i = 1; i < n; i++){
-		if (s[p[i]] != s[p[i-1]])
+		if (s[p[i]] != s[p[i - 1]])
 			classes++;
 		c[p[i]] = classes - 1;
 	}
-
 	vector<int> pn(n), cn(n);
 	for (int h = 0; (1 << h) < n; h++){
 		// using principle of radix sort, sort by second element first
